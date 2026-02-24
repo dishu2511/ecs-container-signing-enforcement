@@ -80,17 +80,17 @@ security_group = aws.ec2.SecurityGroup("ecs-task-sg",
         "cidr_blocks": ["0.0.0.0/0"]
     }])
 
-# # ECS Service
-# service = aws.ecs.Service("container-signing-service",
-#     cluster=cluster.arn,
-#     task_definition=task_definition.arn,
-#     desired_count=1,
-#     launch_type="FARGATE",
-#     network_configuration={
-#         "assign_public_ip": True,
-#         "subnets": [subnet_id],
-#         "security_groups": [security_group.id]
-#     })
+# Service with Signed Container Task
+service = aws.ecs.Service("container-signing-service",
+    cluster=cluster.arn,
+    task_definition=task_definition.arn,
+    desired_count=1,
+    launch_type="FARGATE",
+    network_configuration={
+        "assign_public_ip": True,
+        "subnets": [subnet_id],
+        "security_groups": [security_group.id]
+    })
 
 # Busybox Task Definition
 busybox_log_group = aws.cloudwatch.LogGroup("busybox-log-group",
@@ -119,16 +119,17 @@ busybox_task_definition = aws.ecs.TaskDefinition("busybox-task",
         }
     }]))
 
-# busybox_service = aws.ecs.Service("busybox-service",
-#     cluster=cluster.arn,
-#     task_definition=busybox_task_definition.arn,
-#     desired_count=1,
-#     launch_type="FARGATE",
-#     network_configuration={
-#         "assign_public_ip": True,
-#         "subnets": ["subnet-039e1fa032a38212e"],
-#         "security_groups": [security_group.id]
-#     })
+# Service with Un-Signed Container Task
+busybox_service = aws.ecs.Service("busybox-service",
+    cluster=cluster.arn,
+    task_definition=busybox_task_definition.arn,
+    desired_count=1,
+    launch_type="FARGATE",
+    network_configuration={
+        "assign_public_ip": True,
+        "subnets": ["subnet-039e1fa032a38212e"],
+        "security_groups": [security_group.id]
+    })
 
 # Prepare cosign layer
 cosign_prep = CosignLayer("cosign-prep")
