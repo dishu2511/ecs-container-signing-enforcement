@@ -1,0 +1,10 @@
+# Copy this file to Pulumi.<stack-name>.yaml and fill in your values
+# Example: cp Pulumi.example.yaml Pulumi.dev.yaml
+
+config:
+  aws:region: ap-southeast-2
+  ecs-container-signing-infra:aws_account_id: "<YOUR_AWS_ACCOUNT_ID>"
+  ecs-container-signing-infra:kms_key_id: "<YOUR_KMS_KEY_ID>"
+  ecs-container-signing-infra:vpc_id: "<YOUR_VPC_ID>"
+  ecs-container-signing-infra:subnet_id: "<YOUR_SUBNET_ID>"
+  ecs-container-signing-infra:ecr_repository: "container-signing-test"

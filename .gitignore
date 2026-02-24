@@ -1,0 +1,16 @@
+*.pyc
+venv/
+
+# Pulumi stack-specific config (contains sensitive values)
+Pulumi.*.yaml
+!Pulumi.example.yaml
+
+# Lambda zip files
+*.zip
+
+# Layer directory
+layer/
+
+
+# extra files
+extra/

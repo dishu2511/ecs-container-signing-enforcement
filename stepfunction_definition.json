@@ -1,0 +1,69 @@
+{
+  "Comment": "Container Signing Triage and Alert Workflow",
+  "StartAt": "TriageDecision",
+  "States": {
+    "TriageDecision": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${TriageLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.triageResult",
+      "ResultSelector": {
+        "enriched.$": "$.Payload"
+      },
+      "Next": "ShouldAlert"
+    },
+    "ShouldAlert": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.triageResult.enriched.shouldAlert",
+          "BooleanEquals": true,
+          "Next": "SendAlert"
+        }
+      ],
+      "Default": "NoAlert"
+    },
+    "SendAlert": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AlertLambdaArn}",
+        "Payload.$": "$.triageResult.enriched"
+      },
+      "ResultPath": "$.alertResult",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.alertError",
+          "Next": "AlertFailed"
+        }
+      ],
+      "End": true
+    },
+    "NoAlert": {
+      "Type": "Pass",
+      "Result": {
+        "message": "Alert suppressed by triage logic"
+      },
+      "End": true
+    },
+    "AlertFailed": {
+      "Type": "Pass",
+      "Result": {
+        "message": "Alert failed but workflow continues (best-effort)"
+      },
+      "End": true
+    }
+  }
+}
