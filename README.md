@@ -253,13 +253,6 @@ This will delete:
 - CloudWatch Log Groups
 - S3 bucket (if created)
 
-## 🤝 Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
 
 ## 📝 License
 
@@ -291,9 +284,3 @@ MIT License - see LICENSE file for details
 - Check EventBridge role has `states:StartExecution` permission
 - Review Step Functions execution history
 
-## 📞 Support
-
-For issues and questions:
-- Open an issue on GitHub
-- Check CloudWatch Logs for detailed error messages
-- Review [CONFIG.md](CONFIG.md) for configuration help
